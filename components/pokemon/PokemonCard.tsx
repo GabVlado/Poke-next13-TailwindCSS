@@ -16,7 +16,7 @@ export const PokemonCard: FC<Props> = ({ children, pokemon }) => {
     const router = useRouter();
 
     const onClick = (  ) => {
-        router.push(`/pokemon/${pokemon.id}`);
+        router.push(`/name/${pokemon.name}`);
 
     }
 
@@ -31,16 +31,18 @@ export const PokemonCard: FC<Props> = ({ children, pokemon }) => {
                         className="flex flex-col items-center h-full"
                         onClick={onClick}
                     >
-                        <div className="" >
+                        <div className="h-[100px] w-[100px] relative"  >
                             <Image
                                 src={img}
                                 alt={name}
-                                width={100}
-                                height={100}
-                                style={{ width: '100px'}}
+                                // layout='fill'
+                                fill
+                                style={{objectFit: 'fill'}}
+                                // width={100}
+                                // height={100}
                             />
                         </div>
-                        <div className="flex flex-row justify-around items-center w-full h-full ">
+                        <div className="flex flex-row justify-around items-center w-full  ">
                             <p className="text-white capitalize">{name}</p>
                             <p className="text-white">#{id}</p>
                         </div>

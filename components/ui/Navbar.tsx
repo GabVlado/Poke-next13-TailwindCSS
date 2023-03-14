@@ -18,15 +18,17 @@ export const Navbar = () => {
                     height={60}
                 />
 
-                    <Link
-                        href={'/'}
-                        className="flex flex-row cursor-pointer"
+                <Link
+                    href={'/'}
+                    className="flex flex-row cursor-pointer"
+                >
 
-                    >
+                    <h2 className="text-white text-lg font-semibold">P</h2>
+                    <h3 className="text-white text-lg font-semibold">okémon</h3>
 
-                        <h2 className="text-white text-lg font-semibold">P</h2>
-                        <h3 className="text-white text-lg font-semibold">okémon</h3>
-                    </Link>
+
+
+                </Link>
 
             </div>
             <div>
@@ -37,7 +39,7 @@ export const Navbar = () => {
                         className="text-white text-lg font-normal"
 
                     >
-                            Favoritos
+                        Favoritos
                     </p>
                 </Link>
             </div>

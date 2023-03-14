@@ -1,35 +1,31 @@
-import { useState } from "react";
+import { Layout } from "@components/layouts";
+import pokeApi from "api/pokeApi";
+import confetti from "canvas-confetti";
+import { Pokemon, PokemonListResponse } from "interfaces";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Image from "next/image";
-import confetti from 'canvas-confetti';
-
-import pokeApi from "api/pokeApi";
-
-import { Layout } from "@components/layouts"
-
-import { Pokemon } from "interfaces";
+import { useEffect, useState } from "react";
 import { getPokemonInfo, localFavorites } from "utils";
-
-
-
 
 interface Props {
     pokemon: Pokemon;
 
 }
 
-const PokemonPage: NextPage<Props> = ({ pokemon }) => {
+const PokemonByName: NextPage<Props> = ({ pokemon }) => {
 
-    //console.log({pokemon})
+    const [isInFavorites, setIsInFavorites] = useState(false)
+    //localFavorites.existInFavoritesLocal(pokemon.id)
+    useEffect(() => {
+        setIsInFavorites(localFavorites.existInFavoritesLocal(pokemon.id));
+      }, [pokemon.id]);
 
-    const [isInFavorites, setIsInFavorites] = useState(localFavorites.existInFavoritesLocal(pokemon.id))
 
-
-    const onToggleFavorite = (  ) => {
+    const onToggleFavorite = () => {
         localFavorites.toggleFavorites(pokemon.id)
         setIsInFavorites(!isInFavorites)
 
-        if( isInFavorites) return;
+        if (isInFavorites) return;
         confetti({
             particleCount: 100,
             zIndex: 999,
@@ -37,14 +33,13 @@ const PokemonPage: NextPage<Props> = ({ pokemon }) => {
             spread: 160,
             origin: {
                 x: 0.8,
-                y:0.1
-             }
-          });
+                y: 0.1
+            }
+        });
 
     }
 
-   const buttonClass = isInFavorites ? 'bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl' : 'bg-slate-800'
-
+    const buttonClass = isInFavorites ? 'bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl' : 'bg-slate-800'
 
 
 
@@ -67,8 +62,7 @@ const PokemonPage: NextPage<Props> = ({ pokemon }) => {
                                 src={pokemon.sprites.other?.dream_world.front_default || '/no-image.png'}
                                 alt={pokemon.name}
                                 fill
-                                style={{objectFit: 'contain', top:'40%'}}
-
+                                style={{ objectFit: 'contain', top: '40%' }}
 
                             />
                         </div>
@@ -108,7 +102,7 @@ const PokemonPage: NextPage<Props> = ({ pokemon }) => {
                                     border-2 border-indigo-500/100
                                     `}
                                 >
-                                    { isInFavorites ? 'En Favoritos' : 'Guardar en Favoritos'}
+                                    {isInFavorites ? 'En Favoritos' : 'Guardar en Favoritos'}
                                 </button>
 
                             </div>
@@ -117,34 +111,34 @@ const PokemonPage: NextPage<Props> = ({ pokemon }) => {
                                 <div className="flex  flex-col items-center
                                     md:max-2xl:flex-row
                                 ">
-                                   <Image
+                                    <Image
                                         src={pokemon.sprites.front_default}
                                         alt={pokemon.name}
                                         width={100}
                                         height={100}
                                         priority
-                                   />
-                                   <Image
+                                    />
+                                    <Image
                                         src={pokemon.sprites.back_default}
                                         alt={pokemon.name}
                                         width={100}
                                         height={100}
                                         priority
-                                   />
-                                   <Image
+                                    />
+                                    <Image
                                         src={pokemon.sprites.front_shiny}
                                         alt={pokemon.name}
                                         width={100}
                                         height={100}
                                         priority
-                                   />
-                                   <Image
+                                    />
+                                    <Image
                                         src={pokemon.sprites.back_shiny}
                                         alt={pokemon.name}
                                         width={100}
                                         height={100}
                                         priority
-                                   />
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -157,30 +151,42 @@ const PokemonPage: NextPage<Props> = ({ pokemon }) => {
     )
 }
 
+
 export const getStaticPaths: GetStaticPaths = async (ctx) => {
 
 
-    const pokemons151: string[] = [...Array(151)].map((value, index) => `${index + 1}`)
-    // console.log({ pokemons151 });
+    const { data } = await pokeApi.get<PokemonListResponse>('/pokemon?limit=151')
+
+    const pokemonNames: string[] = data.results.map(pokemon => pokemon.name)
 
 
     return {
-        paths: pokemons151.map(id => ({
-            params: { id }
+
+        //SOLUCIONN FERNANDO
+
+        paths: pokemonNames.map(name => ({
+            params: { name }
         })),
+
+        /* SOLUCION GABRIEL */
+
+        // paths:results.map( pokemon => ({
+        //     params: {name:pokemon.name}
+        // })),
 
         fallback: false
     }
 }
 
+
 export const getStaticProps: GetStaticProps = async ({ params }) => {
 
-    const { id } = params as { id: string };
+    const { name } = params as { name: string };
 
 
     return {
         props: {
-            pokemon:await getPokemonInfo(id)
+            pokemon: await getPokemonInfo(name)
         }
     }
 }
@@ -189,4 +195,4 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
 
 
-export default PokemonPage;
+export default PokemonByName;

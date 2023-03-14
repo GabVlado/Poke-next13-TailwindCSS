@@ -4,6 +4,8 @@ import { Layout } from "@components/layouts";
 import pokeApi from "api/pokeApi";
 import { PokemonListResponse, SmallPokemon } from "interfaces";
 import { PokemonCard } from "@components/pokemon";
+import { useContext } from "react";
+
 
 
 interface Props {
@@ -18,25 +20,28 @@ const HomePage: NextPage<Props> = ({ pokemons }) => {
 
 	//https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/id.svg
 
+
 	return (
-		<Layout title="Listado de Pokemones">
 
-			<ul className="
-				grid grid-cols-2
-				md:grid-cols-3
-				lg:grid-cols-6
-				2xl:grid-cols-12
-				place-items-center
-				gap-y-10
-				mt-8 mx-2  ">
-				{
-					pokemons.map(( pokemon) => (
-						<PokemonCard pokemon={pokemon}  key={pokemon.id} />
+			<Layout title="Listado de Pokemones">
 
-					))
-				}
-			</ul>
-		</Layout>
+				<ul className="
+					grid grid-cols-2
+					md:grid-cols-3
+					lg:grid-cols-6
+					2xl:grid-cols-12
+					place-items-center
+					gap-y-10
+					mt-8 mx-2  ">
+					{
+						pokemons.map(( pokemon) => (
+							<PokemonCard pokemon={pokemon}  key={pokemon.id} />
+
+						))
+					}
+				</ul>
+			</Layout>
+
 	)
 }
 
